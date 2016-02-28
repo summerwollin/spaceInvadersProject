@@ -1,4 +1,11 @@
 /*
+  spaceinvaders.js
+
+  the core logic for the space invaders game.
+
+*/
+
+/*
     Game Class
 
     The Game class represents a Space Invaders game.
@@ -13,6 +20,7 @@
     Listen for 'gameWon' or 'gameLost' events to handle the game
     ending.
 */
+
 
 //  Creates an instance of the Game class.
 function Game() {
@@ -116,6 +124,20 @@ Game.prototype.currentState = function() {
     return this.stateStack.length > 0 ? this.stateStack[this.stateStack.length - 1] : null;
 };
 
+// //  Mutes or unmutes the game.
+// Game.prototype.mute = function(mute) {
+//
+//     //  If we've been told to mute, mute.
+//     if(mute === true) {
+//         this.sounds.mute = true;
+//     } else if (mute === false) {
+//         this.sounds.mute = false;
+//     } else {
+//         // Toggle mute instead...
+//         this.sounds.mute = this.sounds.mute ? false : true;
+//     }
+// };
+
 //  The main loop.
 function GameLoop(game) {
     var currentState = game.currentState();
@@ -187,6 +209,16 @@ Game.prototype.keyUp = function(keyCode) {
 function WelcomeState() {
 
 }
+
+// WelcomeState.prototype.enter = function(game) {
+//
+//     // Create and load the sounds.
+//     game.sounds = new Sounds();
+//     game.sounds.init();
+//     game.sounds.loadSound('shoot', 'sounds/shoot.wav');
+//     game.sounds.loadSound('bang', 'sounds/bang.wav');
+//     game.sounds.loadSound('explosion', 'sounds/explosion.wav');
+// };
 
 WelcomeState.prototype.update = function (game, dt) {
 
@@ -423,6 +455,7 @@ PlayState.prototype.update = function(game, dt) {
         }
         if(bang) {
             this.invaders.splice(i--, 1);
+            // game.sounds.playSound('bang');
         }
     }
 
@@ -457,6 +490,7 @@ PlayState.prototype.update = function(game, dt) {
                 bomb.y >= (this.ship.y - this.ship.height/2) && bomb.y <= (this.ship.y + this.ship.height/2)) {
             this.bombs.splice(i--, 1);
             game.lives--;
+            // game.sounds.playSound('explosion');
         }
 
     }
@@ -545,6 +579,10 @@ PlayState.prototype.keyDown = function(game, keyCode) {
         //  Fire!
         this.fireRocket();
     }
+    if(keyCode == 80) {
+        //  Push the pause state.
+        game.pushState(new PauseState());
+    }
 };
 
 PlayState.prototype.keyUp = function(game, keyCode) {
@@ -559,7 +597,35 @@ PlayState.prototype.fireRocket = function() {
         //  Add a rocket.
         this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity));
         this.lastRocketTime = (new Date()).valueOf();
+
+        //  Play the 'shoot' sound.
+        // game.sounds.playSound('shoot');
     }
+};
+
+function PauseState() {
+
+}
+
+PauseState.prototype.keyDown = function(game, keyCode) {
+
+    if(keyCode == 80) {
+        //  Pop the pause state.
+        game.popState();
+    }
+};
+
+PauseState.prototype.draw = function(game, dt, ctx) {
+
+    //  Clear the background.
+    ctx.clearRect(0, 0, game.width, game.height);
+
+    ctx.font="14px Arial";
+    ctx.fillStyle = '#ffffff';
+    ctx.textBaseline="middle";
+    ctx.textAlign="center";
+    ctx.fillText("Paused", game.width / 2, game.height/2);
+    return;
 };
 
 /*
@@ -682,6 +748,72 @@ function GameState(updateProc, drawProc, keyDown, keyUp, enter, leave) {
     this.leave = leave;
 }
 
+/*
+
+    Sounds
+
+    The sounds class is used to asynchronously load sounds and allow
+    them to be played.
+
+*/
+// function Sounds() {
+//
+//     //  The audio context.
+//     this.audioContext = null;
+//
+//     //  The actual set of loaded sounds.
+//     this.sounds = {};
+// }
+//
+// Sounds.prototype.init = function() {
+//
+//     //  Create the audio context, paying attention to webkit browsers.
+//     context = window.AudioContext || window.webkitAudioContext;
+//     this.audioContext = new context();
+//     this.mute = false;
+// };
+//
+// Sounds.prototype.loadSound = function(name, url) {
+//
+//     //  Reference to ourselves for closures.
+//     var self = this;
+//
+//     //  Create an entry in the sounds object.
+//     this.sounds[name] = null;
+//
+//     //  Create an asynchronous request for the sound.
+//     var req = new XMLHttpRequest();
+//     req.open('GET', url, true);
+//     req.responseType = 'arraybuffer';
+//     req.onload = function() {
+//         self.audioContext.decodeAudioData(req.response, function(buffer) {
+//             self.sounds[name] = {buffer: buffer};
+//         });
+//     };
+//     try {
+//       req.send();
+//     } catch(e) {
+//       console.log("An exception occured getting sound the sound " + name + " this might be " +
+//          "because the page is running from the file system, not a webserver.");
+//       console.log(e);
+//     }
+// };
+//
+// Sounds.prototype.playSound = function(name) {
+//
+//     //  If we've not got the sound, don't bother playing it.
+//     if(this.sounds[name] === undefined || this.sounds[name] === null || this.mute === true) {
+//         return;
+//     }
+//
+//     //  Create a sound source, set the buffer, connect to the speakers and
+//     //  play the sound.
+//     var source = this.audioContext.createBufferSource();
+//     source.buffer = this.sounds[name].buffer;
+//     source.connect(this.audioContext.destination);
+//     source.start(0);
+// };
+
 //  Setup the canvas.
 var canvas = document.getElementById("gameCanvas");
 canvas.width = 800;
@@ -709,3 +841,8 @@ window.addEventListener("keyup", function keydown(e) {
     var keycode = e.which || window.event.keycode;
     game.keyUp(keycode);
 });
+
+// function toggleMute() {
+//     game.mute();
+//     document.getElementById("muteLink").innerText = game.sounds.mute ? "unmute" : "mute";
+// }
