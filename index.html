@@ -29,6 +29,11 @@
 				<li role="presentation" id="cookie"><a href="#">Cookie Mode</a></li>
 			</ul>
 		</header>
+		<form action="index.html" method="get">
+      <label for="name">Enter Your Initials
+        <input type="text" name="userid" id="userid" pattern="^[a-zA-Z]{3}$"/>
+      </label>
+			<input type="submit" value="submit" id="submit"/>
 		<main>
     	<div id="gamecontainer">
         <canvas id="gameCanvas"></canvas>

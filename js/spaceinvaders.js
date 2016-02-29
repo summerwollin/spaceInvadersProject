@@ -16,10 +16,12 @@
 
 //  Creates an instance of the Game class.
 $(function() {
-    // var img = new Image();
-    // img.src = 'img/octocat.png';
-    // var enemyImg = new Image();
-    // enemyImg.src = 'img/bitbucket.png'
+
+    var userid = localStorage.getItem("userid");
+    var score = localStorage.getItem("score");
+    // if (userid) {
+    //   console.log(userid);
+    // }
 
     function ViewMode(shipSrc, invaderSrc, width, height) {
       this.shipImg = new Image();
@@ -230,6 +232,10 @@ $(function() {
         ctx.font = "16px Arial";
 
         ctx.fillText("Press 'Space' to start.", game.width / 2, game.height / 2);
+
+        if (userid) {
+          ctx.fillText("Welcome back, " + userid + "!", game.width / 2, game.height / 2 + 40);
+        }
     };
 
     WelcomeState.prototype.keyDown = function(game, keyCode) {
@@ -264,11 +270,20 @@ $(function() {
         ctx.fillText("You scored " + game.score + " and got to level " + game.level, game.width / 2, game.height / 2);
         ctx.font = "16px Arial";
         ctx.fillText("Press 'Space' to play again.", game.width / 2, game.height / 2 + 40);
+
+        //add last game score to game over screen
+        if (score) {
+          ctx.fillText("(Last score: " + score + ")", game.width / 2, game.height / 2 + 80);
+        }
+        
+      localStorage.setItem("score", game.score);
+
     };
 
     GameOverState.prototype.keyDown = function(game, keyCode) {
         if (keyCode == 32) /*space*/ {
             //  Space restarts the game.
+            score = localStorage.getItem("score")
             game.lives = 3;
             game.score = 0;
             game.level = 1;
@@ -753,6 +768,7 @@ $(function() {
         game.keyUp(keycode);
     });
 
+    //On click, change view mode
     $('#invaders').on("click", function() {
       currentMode = invadersMode;
       $('#gameCanvas').css('background-color', '#232E37');
@@ -765,4 +781,10 @@ $(function() {
      currentMode = cookieMode;
      $('#gameCanvas').css('background-color', '#25BFFF');
     });
+
+    //save userinput to local storage
+    $('#submit').on('click', function() {
+      var input = $('#userid')[0];
+      localStorage.setItem("userid", input.value);
+  });
 });
