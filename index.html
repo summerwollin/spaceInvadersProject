@@ -14,14 +14,21 @@
 		<link rel="stylesheet" type="text/css" href="css/core.css">
 	</head>
 	<body>
-		<div class="page-header">
-  		<h1>Let's Play<br>Space Invaders!</h1>
-		</div>
-		<ul class="nav nav-pills">
-  		<li role="presentation" class="active"><a href="#">Play</a></li>
-  		<li role="presentation"><a href="#">About the Game</a></li>
-  		<li role="presentation"><a href="#">About Me</a></li>
-		</ul>
+		<header>
+			<div class="page-header">
+  			<h1>Let's Play<br>Space Invaders!</h1>
+			</div>
+			<ul class="nav nav-pills nav-justified">
+  			<li role="presentation" id="play"><a href="#">Play</a></li>
+  			<li role="presentation" id="aboutgame"><a href="#">About the Game</a></li>
+  			<li role="presentation" id="aboutme"><a href="#">About Me</a></li>
+			</ul>
+			<ul class="nav nav-pills nav-justified">
+				<li role="presentation" id="invaders"><a href="#">Invaders Mode</a></li>
+				<li role="presentation" id="github"><a href="#">Github Mode</a></li>
+				<li role="presentation" id="cookie"><a href="#">Cookie Mode</a></li>
+			</ul>
+		</header>
 		<main>
     	<div id="gamecontainer">
         <canvas id="gameCanvas"></canvas>
