@@ -16,9 +16,20 @@
 
 //  Creates an instance of the Game class.
 $(function() {
+
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
     var score = localStorage.getItem("score");
+    var hScores = (localStorage.getItem("hScores")).split(',');
+
+    if (hScores) {
+      $('ol li:nth-child(1)').text(hScores[0]);
+      highScores[0] = hScores[0];
+      $('ol li:nth-child(2)').text(hScores[1]);
+      highScores[1] = hScores[1];
+      $('ol li:nth-child(3)').text(hScores[2]);
+      highScores[1] = hScores[1];
+    }
 
     function scoreCounter(gameScore, highScores) {
 
@@ -292,11 +303,12 @@ $(function() {
         if (keyCode == 32) /*space*/ {
             //  Space restarts the game.
             scoreCounter(game.score, highScores);
+            localStorage.setItem("hScores", highScores);
             $('ol li:nth-child(1)').text(highScores[0]);
             $('ol li:nth-child(2)').text(highScores[1]);
             $('ol li:nth-child(3)').text(highScores[2]);
-            console.log(highScores);
-            score = localStorage.getItem("score")
+
+            score = localStorage.getItem("score");
             game.lives = 3;
             game.score = 0;
             game.level = 1;
