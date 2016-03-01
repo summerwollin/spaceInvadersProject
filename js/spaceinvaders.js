@@ -16,12 +16,19 @@
 
 //  Creates an instance of the Game class.
 $(function() {
-
+    var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
     var score = localStorage.getItem("score");
-    // if (userid) {
-    //   console.log(userid);
-    // }
+
+    function scoreCounter(gameScore, highScores) {
+
+       for (var i = 0; i < highScores.length; i++) {
+         if (gameScore > highScores[i]) {
+           highScores[i] = gameScore;
+           return;
+         }
+       }
+     }
 
     function ViewMode(shipSrc, invaderSrc, width, height) {
       this.shipImg = new Image();
@@ -224,12 +231,12 @@ $(function() {
         //  Clear the background.
         ctx.clearRect(0, 0, game.width, game.height);
 
-        ctx.font = "30px Arial";
+        ctx.font = "30px arcadeFont";
         ctx.fillStyle = '#ffffff';
         ctx.textBaseline = "center";
         ctx.textAlign = "center";
         ctx.fillText("Space Invaders", game.width / 2, game.height / 2 - 40);
-        ctx.font = "16px Arial";
+        ctx.font = "16px arcadeFont";
 
         ctx.fillText("Press 'Space' to start.", game.width / 2, game.height / 2);
 
@@ -261,28 +268,34 @@ $(function() {
         //  Clear the background.
         ctx.clearRect(0, 0, game.width, game.height);
 
-        ctx.font = "30px Arial";
+        ctx.font = "30px arcadeFont";
         ctx.fillStyle = '#ffffff';
         ctx.textBaseline = "center";
         ctx.textAlign = "center";
         ctx.fillText("Game Over!", game.width / 2, game.height / 2 - 40);
-        ctx.font = "16px Arial";
+        ctx.font = "16px arcadeFont";
         ctx.fillText("You scored " + game.score + " and got to level " + game.level, game.width / 2, game.height / 2);
-        ctx.font = "16px Arial";
+        ctx.font = "16px arcadeFont";
         ctx.fillText("Press 'Space' to play again.", game.width / 2, game.height / 2 + 40);
 
         //add last game score to game over screen
         if (score) {
           ctx.fillText("(Last score: " + score + ")", game.width / 2, game.height / 2 + 80);
         }
-        
+
       localStorage.setItem("score", game.score);
+
 
     };
 
     GameOverState.prototype.keyDown = function(game, keyCode) {
         if (keyCode == 32) /*space*/ {
             //  Space restarts the game.
+            scoreCounter(game.score, highScores);
+            $('ol li:nth-child(1)').text(highScores[0]);
+            $('ol li:nth-child(2)').text(highScores[1]);
+            $('ol li:nth-child(3)').text(highScores[2]);
+            console.log(highScores);
             score = localStorage.getItem("score")
             game.lives = 3;
             game.score = 0;
@@ -572,7 +585,7 @@ $(function() {
 
         //  Draw info.
         var textYpos = game.gameBounds.bottom + ((game.height - game.gameBounds.bottom) / 2) + 14 / 2;
-        ctx.font = "14px Arial";
+        ctx.font = "14px arcadeFont";
         ctx.fillStyle = '#ffffff';
         var info = "Lives: " + game.lives;
         ctx.textAlign = "left";
@@ -651,12 +664,12 @@ $(function() {
         //  Clear the background.
         ctx.clearRect(0, 0, game.width, game.height);
 
-        ctx.font = "36px Arial";
+        ctx.font = "36px arcadeFont";
         ctx.fillStyle = '#ffffff';
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.fillText("Level " + this.level, game.width / 2, game.height / 2);
-        ctx.font = "24px Arial";
+        ctx.font = "24px arcadeFont";
         ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height / 2 + 36);
         return;
     };
@@ -786,5 +799,6 @@ $(function() {
     $('#submit').on('click', function() {
       var input = $('#userid')[0];
       localStorage.setItem("userid", input.value);
-  });
+    });
+
 });

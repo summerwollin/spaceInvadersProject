@@ -1,0 +1,29 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /usr/local/Cellar/node/5.5.0/bin/node /usr/local/bin/firebase deploy
+[debug] Platform:     darwin
+[debug] Node Version: v5.5.0
+[debug] Time:         Tue Mar 01 2016 11:58:13 GMT-0700 (MST)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/firebase/spaceinvadersjs/token?token=XXX 
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/firebase/spaceinvadersjs/token?token=XXX 
+[debug] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'spaceinvadersjs'...
+[info] 
+[info] i  deploying 
+[debug] >>> HTTP REQUEST POST https://deploy.firebase.com/firebase/spaceinvadersjs/releases?token=XXX
+[debug] TypeError: Cannot read property 'error' of undefined
+    at Request._callback (/usr/local/lib/node_modules/firebase-tools/lib/api.js:31:22)
+    at Request.self.callback (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:199:22)
+    at emitTwo (events.js:100:13)
+    at Request.emit (events.js:185:7)
+    at Request.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1036:10)
+    at emitOne (events.js:95:20)
+    at Request.emit (events.js:182:7)
+    at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:963:12)
+    at emitNone (events.js:85:20)
+    at IncomingMessage.emit (events.js:179:7)
+[error] 
+[error] Error: An unexpected error has occurred.

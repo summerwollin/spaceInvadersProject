@@ -2,6 +2,11 @@
 <html>
 	<head>
 		<title>Space Invaders</title>
+		<meta property="og:url"                content="http://spaceinvadersjavascript.com.s3-website-us-east-1.amazonaws.com/" />
+		<meta property="og:title"              content="Space Invaders with Front End Javascript" />
+		<meta property="og:description"        content="Play Space Invaders in your browser." />
+		<meta property="og:image"              content="https://c2.staticflickr.com/4/3127/3298378558_a349de0347_z.jpg?zz=1" />
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -14,31 +19,83 @@
 		<link rel="stylesheet" type="text/css" href="css/core.css">
 	</head>
 	<body>
+		<script>
+  		window.fbAsyncInit = function() {
+    		FB.init({
+      	appId      : '195289184169528',
+      	xfbml      : true,
+      	version    : 'v2.5'
+    		});
+  		};
+
+  		(function(d, s, id){
+     		var js, fjs = d.getElementsByTagName(s)[0];
+     		if (d.getElementById(id)) {return;}
+     		js = d.createElement(s); js.id = id;
+     		js.src = "//connect.facebook.net/en_US/sdk.js";
+     		fjs.parentNode.insertBefore(js, fjs);
+   		}(document, 'script', 'facebook-jssdk'));
+		</script>
+
+		<div id="fb-root"></div>
+
 		<header>
+			<nav class="navbar navbar-default">
+			  <div class="container-fluid">
+			    <!-- Collect the nav links, forms, and other content for toggling -->
+			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      <form class="navbar-form navbar-left" role="search">
+			        <div class="form-group">
+			          <input type="text" class="form-control" placeholder="Enter Initials" name="userid" id="userid" pattern="^[a-zA-Z]{3}$">
+			        </div>
+			        <button type="submit" class="btn btn-default" id="submit">Submit</button>
+			      </form>
+			      <ul class="nav navbar-nav navbar-right">
+			        <li><a href="index.html">Play</a></li>
+							<li><a href="game.html">About The Game</a></li>
+							<li><a href="developer.html">About Me</a></li>
+			      </ul>
+			    </div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>
+
 			<div class="page-header">
   			<h1>Let's Play<br>Space Invaders!</h1>
 			</div>
-			<ul class="nav nav-pills nav-justified">
-  			<li role="presentation" id="play"><a href="#">Play</a></li>
-  			<li role="presentation" id="aboutgame"><a href="#">About the Game</a></li>
-  			<li role="presentation" id="aboutme"><a href="#">About Me</a></li>
-			</ul>
 			<ul class="nav nav-pills nav-justified">
 				<li role="presentation" id="invaders"><a href="#">Invaders Mode</a></li>
 				<li role="presentation" id="github"><a href="#">Github Mode</a></li>
 				<li role="presentation" id="cookie"><a href="#">Cookie Mode</a></li>
 			</ul>
 		</header>
-		<form action="index.html" method="get">
+		<!-- <form action="index.html" method="get">
       <label for="name">Enter Your Initials
         <input type="text" name="userid" id="userid" pattern="^[a-zA-Z]{3}$"/>
       </label>
 			<input type="submit" value="submit" id="submit"/>
+		</form> -->
+
+
 		<main>
+			<div class="scores">
+				<h4>High Scores:</h4>
+				<ol>
+					<li>0</li>
+					<li>0</li>
+					<li>0</li>
+				</ol>
+			</div>
     	<div id="gamecontainer">
         <canvas id="gameCanvas"></canvas>
   	  </div>
+			<div class="share">
+				<h4>Like this game?</h4>
+				<h5>Why not share?!</h5>
+				<div class="fb-share-button" data-href="http://spaceinvadersjavascript.com.s3-website-us-east-1.amazonaws.com/" data-layout="button"></div>
+			</div>
+
 		</main>
 		<script src="js/spaceinvaders.js"></script>
+
 	</body>
 </html>

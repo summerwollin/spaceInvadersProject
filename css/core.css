@@ -3,29 +3,40 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
+  color: white;
+  background-color: black;
 
 }
-header {
-  margin-top: -10px;
+a {
+  color: white;
 }
+
+@font-face {
+  font-family: arcadeFont;
+  src: url(PressStart2P.ttf);
+}
+* {
+  font-family: arcadeFont;
+}
+
 .page-header {
   text-align: center;
+  border-bottom: none;
+  margin-top: -10px;
+}
+.navbar {
+  background-color: #232E37;
+}
+.nav-pills {
+  margin-top: -30px;
 }
 main {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: gray;
+  background-color: black;
 }
-#play {
-  background-color: #FDA64F;
-}
-#aboutgame {
-  background-color: #BCF3C8;
-}
-#aboutme {
-  background-color: #E4BAE8;
-}
+
 #gamecontainer {
   width: 800px;
   margin-left: auto;
@@ -43,11 +54,27 @@ main {
     margin-right: auto;
 }
 #invaders {
-  background-color: #232E37;
+  background-color: #02FD02;
 }
 #github {
-  background-color: #F5DC96;
+  background-color: #FF7502;
 }
 #cookie {
-  background-color: #25BFFF;
+  background-color: #FD0290;
+}
+.scores {
+  width: 180px;
+  height: 180px;
+  border: 1px solid white;
+  padding: 20px;
+  margin-left: 50px;
+  margin-top: -200px;
+}
+.share {
+  border: 1px solid white;
+  height: 180px;
+  width: 180px;
+  margin-top: -200px;
+  padding: 20px;
+  margin-right: 50px;
 }
