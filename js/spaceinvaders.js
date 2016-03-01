@@ -20,9 +20,10 @@ $(function() {
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
     var score = localStorage.getItem("score");
-    var hScores = (localStorage.getItem("hScores")).split(',');
+    var hScores = localStorage.getItem("hScores");
 
     if (hScores) {
+      hScores = hScores.split(',');
       $('ol li:nth-child(1)').text(hScores[0]);
       highScores[0] = hScores[0];
       $('ol li:nth-child(2)').text(hScores[1]);

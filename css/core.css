@@ -10,7 +10,9 @@ body, html {
 a {
   color: white;
 }
-
+p a {
+  color: #02FD02
+}
 @font-face {
   font-family: arcadeFont;
   src: url(PressStart2P.ttf);
@@ -55,6 +57,7 @@ main {
 }
 #invaders {
   background-color: #02FD02;
+
 }
 #github {
   background-color: #FF7502;
@@ -78,7 +81,13 @@ main {
   padding: 20px;
   margin-right: 50px;
 }
-@media screen and (max-width: 480px) {
-
-  }
+.aboutText {
+  width: 400px;
+  height: 400px;
+  border: 1px solid white;
+  text-align: center;
+  justify-content: center;
+}
+.texty {
+  margin-top: 80px;
 }

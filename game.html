@@ -1,35 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>About the Game</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<html>
+	<head>
+		<title>Space Invaders</title>
 
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="css/core.css">
-</head>
-</head>
-<body>
-  <header>
-    <div class="page-header">
-      <h1>About This Game</h1>
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="css/core.css">
+	</head>
+	<body>
+
+		<header>
+			<nav class="navbar navbar-default">
+			  <div class="container-fluid">
+			    <!-- Collect the nav links, forms, and other content for toggling -->
+			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      <form class="navbar-form navbar-left" role="search">
+			        <div class="form-group">
+			          <input type="text" class="form-control" placeholder="Enter Initials" name="userid" id="userid" pattern="^[a-zA-Z]{3}$">
+			        </div>
+			        <button type="submit" class="btn btn-default" id="submit">Submit</button>
+			      </form>
+			      <ul class="nav navbar-nav navbar-right">
+			        <li><a href="index.html">Play</a></li>
+							<li><a href="game.html">About The Game</a></li>
+			      </ul>
+			    </div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>
+
+			<div class="page-header">
+  			<h1>Let's Play<br>Space Invaders!</h1>
+			</div>
+			<ul class="nav nav-pills nav-justified">
+				<li role="presentation" id="invaders"><a href="#">About</a></li>
+				<li role="presentation" id="github"><a href="#">The</a></li>
+				<li role="presentation" id="cookie"><a href="#">Game</a></li>
+			</ul>
+		</header>
+    <div class="row">
+      <div class="col-md-5">
+        <img src="http://www.codeproject.com/KB/scripting/681130/ScreenshotIntro.png" class="img-responsive" alt="Responsive image">
+      </div>
+      <div class="col-md-7 text-center texty">
+        <p>This game is based on Dave Kerr's Space Invaders JavaScript Tutorial. While this version includes many additional features and mechanics, this code is derived from and based on his work. Please checkout the original tutorial on <a href="https://github.com/dwmkerr/spaceinvaders">GitHub</a> and on <a href="http://www.codeproject.com/Articles/681130/Learn-JavaScript-Part-Space-Invaders">Code Project</a></p>
+        <br><p>Space Invaders JS is entirely written using front end JavaScript and jQuery. The game is able to remember a user's initials and high scores by utilizing localStorage. User's are able to pick between three different play modes without stopping the game play. If you enjoyed this project, or would like to see the code feel free to <a href="https://github.com/summerwollin/spaceInvadersProject">checkout the GitHub Repo!</a></p>
+      </div>
     </div>
-    <ul class="nav nav-pills nav-justified">
-      <li role="presentation" id="play"><a href="index.html">Play</a></li>
-      <li role="presentation" id="aboutgame"><a href="game.html">About the Game</a></li>
-      <li role="presentation" id="aboutme"><a href="developer.html">About Me</a></li>
-    </ul>
-    <ul class="nav nav-pills nav-justified">
-      <li role="presentation" id="invaders"><a href="#">Invaders Mode</a></li>
-      <li role="presentation" id="github"><a href="#">Github Mode</a></li>
-      <li role="presentation" id="cookie"><a href="#">Cookie Mode</a></li>
-    </ul>
-  </header>
-</body>
+
+		<!-- <script src="js/spaceinvaders.js"></script> -->
+
+	</body>
 </html>
