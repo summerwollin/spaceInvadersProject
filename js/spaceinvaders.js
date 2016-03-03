@@ -606,12 +606,13 @@ $(function() {
         var textYpos = game.gameBounds.bottom + ((game.height - game.gameBounds.bottom) / 2) + 14 / 2;
         ctx.font = "14px arcadeFont";
         ctx.fillStyle = '#ffffff';
-        var info = "Lives: " + game.lives;
+        // var info = "Lives: " + game.lives;
+        var info = "Score: " + game.score;
         ctx.textAlign = "left";
-        ctx.fillText(info, game.gameBounds.left, textYpos);
-        info = "Score: " + game.score + ", Level: " + game.level;
+        ctx.fillText(info, game.gameBounds.left -15, textYpos);
+        info = "Lives: " + game.lives + "   Level: " + game.level;
         ctx.textAlign = "right";
-        ctx.fillText(info, game.gameBounds.right, textYpos);
+        ctx.fillText(info, game.gameBounds.right +8, textYpos);
 
         //  If we're in debug mode, draw bounds.
         if (this.config.debugMode) {
