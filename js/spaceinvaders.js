@@ -17,7 +17,7 @@
 //  Creates an instance of the Game class.
 $(function() {
 
-    var gamepad = null;
+    // var gamepad = null;
 
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
@@ -41,6 +41,16 @@ $(function() {
       highScores[1] = hScores[1];
       $('ol li:nth-child(3)').text(hScores[2]);
       highScores[1] = hScores[1];
+    }
+
+    //toggle mute on button press
+    $('#muteLink').on('click', function(e) {
+      return toggleMute();
+    });
+
+    function toggleMute() {
+      game.mute();
+      $("#muteLink")[0].innerText = game.sounds.mute ? "unmute" : "mute";
     }
 
     function ViewMode(shipSrc, invaderSrc, width, height) {
@@ -99,7 +109,7 @@ $(function() {
         this.gameCanvas = null;
 
         // //  All sounds.
-        // this.sounds = null;
+        this.sounds = null;
     }
 
     //  Initialis the Game with a canvas.
@@ -161,6 +171,20 @@ $(function() {
     Game.prototype.currentState = function() {
         return this.stateStack.length > 0 ? this.stateStack[this.stateStack.length - 1] : null;
     };
+
+    Game.prototype.mute = function(mute) {
+
+        //  If we've been told to mute, mute.
+        if(mute === true) {
+            this.sounds.mute = true;
+        } else if (mute === false) {
+            this.sounds.mute = false;
+        } else {
+            // Toggle mute instead...
+            this.sounds.mute = this.sounds.mute ? false : true;
+        }
+    };
+
 
     //  The main loop.
     function GameLoop(game) {
@@ -236,6 +260,16 @@ $(function() {
     function WelcomeState() {
 
     }
+
+    WelcomeState.prototype.enter = function(game) {
+
+    // Create and load the sounds.
+    game.sounds = new Sounds();
+    game.sounds.init();
+    game.sounds.loadSound('shoot', 'sounds/shoot.wav');
+    game.sounds.loadSound('bang', 'sounds/bang.wav');
+    game.sounds.loadSound('explosion', 'sounds/explosion.wav');
+  };
 
     WelcomeState.prototype.update = function(game, dt) {
 
@@ -508,6 +542,7 @@ $(function() {
             }
             if (bang) {
                 this.invaders.splice(i--, 1);
+                game.sounds.playSound('bang');
             }
         }
 
@@ -542,6 +577,7 @@ $(function() {
                 bomb.y >= (this.ship.y - this.ship.height / 2) && bomb.y <= (this.ship.y + this.ship.height / 2)) {
                 this.bombs.splice(i--, 1);
                 game.lives--;
+                game.sounds.playSound('explosion');
             }
 
         }
@@ -555,7 +591,7 @@ $(function() {
                 (invader.y - invader.height / 2) < (this.ship.y + this.ship.height / 2)) {
                 //  Dead by collision!
                 game.lives = 0;
-                // game.sounds.playSound('explosion');
+                game.sounds.playSound('explosion');
             }
         }
 
@@ -645,6 +681,9 @@ $(function() {
             //  Add a rocket.
             this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity));
             this.lastRocketTime = (new Date()).valueOf();
+
+            //  Play the 'shoot' sound.
+            game.sounds.playSound('shoot');
         }
     };
 
@@ -768,6 +807,72 @@ $(function() {
         this.leave = leave;
     }
 
+    /*
+
+        Sounds
+
+        The sounds class is used to asynchronously load sounds and allow
+        them to be played.
+
+    */
+    function Sounds() {
+
+        //  The audio context.
+        this.audioContext = null;
+
+        //  The actual set of loaded sounds.
+        this.sounds = {};
+    }
+
+    Sounds.prototype.init = function() {
+
+        //  Create the audio context, paying attention to webkit browsers.
+        context = window.AudioContext || window.webkitAudioContext;
+        this.audioContext = new context();
+        this.mute = false;
+    };
+
+    Sounds.prototype.loadSound = function(name, url) {
+
+        //  Reference to ourselves for closures.
+        var self = this;
+
+        //  Create an entry in the sounds object.
+        this.sounds[name] = null;
+
+        //  Create an asynchronous request for the sound.
+        var req = new XMLHttpRequest();
+        req.open('GET', url, true);
+        req.responseType = 'arraybuffer';
+        req.onload = function() {
+            self.audioContext.decodeAudioData(req.response, function(buffer) {
+                self.sounds[name] = {buffer: buffer};
+            });
+        };
+        try {
+          req.send();
+        } catch(e) {
+          console.log("An exception occured getting sound the sound " + name + " this might be " +
+             "because the page is running from the file system, not a webserver.");
+          console.log(e);
+        }
+    };
+
+    Sounds.prototype.playSound = function(name) {
+
+        //  If we've not got the sound, don't bother playing it.
+        if(this.sounds[name] === undefined || this.sounds[name] === null || this.mute === true) {
+            return;
+        }
+
+        //  Create a sound source, set the buffer, connect to the speakers and
+        //  play the sound.
+        var source = this.audioContext.createBufferSource();
+        source.buffer = this.sounds[name].buffer;
+        source.connect(this.audioContext.destination);
+        source.start(0);
+    };
+
     //  Setup the canvas.
     var canvas = document.getElementById("gameCanvas");
     canvas.width = 800;
@@ -802,44 +907,44 @@ $(function() {
         game.keyUp(keycode);
     });
 
-    var lastButton;
-    var lastIndex;
-
-    function gamepadStateUpdate(oldValue, newValue, injectedkeycode, index) {
-      if(oldValue === newValue) {
-        return;
-      }
-
-      if(newValue === false) {
-        game.keyUp(injectedkeycode);
-      } else {
-        game.keyDown(injectedkeycode);
-      }
-    }
-
-    var gamepadLeftDown = false;
-    var gamepadRightDown = false;
-    var gamepadShootDown = false;
-
-    function pollGamepad() {
-      var gamepad = navigator.getGamepads()[0];
-
-      if(gamepad === null) {
-        return;
-      }
-
-      var buttons = gamepad.buttons;
-
-      gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
-      gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
-      gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
-
-      gamepadShootDown = buttons[ 0].pressed;
-      gamepadLeftDown  = buttons[14].pressed;
-      gamepadRightDown = buttons[15].pressed;
-    }
-
-    window.setInterval(pollGamepad, 10);
+    // var lastButton;
+    // var lastIndex;
+    //
+    // function gamepadStateUpdate(oldValue, newValue, injectedkeycode, index) {
+    //   if(oldValue === newValue) {
+    //     return;
+    //   }
+    //
+    //   if(newValue === false) {
+    //     game.keyUp(injectedkeycode);
+    //   } else {
+    //     game.keyDown(injectedkeycode);
+    //   }
+    // }
+    //
+    // var gamepadLeftDown = false;
+    // var gamepadRightDown = false;
+    // var gamepadShootDown = false;
+    //
+    // function pollGamepad() {
+    //   var gamepad = navigator.getGamepads()[0];
+    //
+    //   if(gamepad === null) {
+    //     return;
+    //   }
+    //
+    //   var buttons = gamepad.buttons;
+    //
+    //   gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
+    //   gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
+    //   gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
+    //
+    //   gamepadShootDown = buttons[ 0].pressed;
+    //   gamepadLeftDown  = buttons[14].pressed;
+    //   gamepadRightDown = buttons[15].pressed;
+    // }
+    //
+    // window.setInterval(pollGamepad, 10);
 
     //On click, change view mode
     $('#invaders').on("click", function() {
