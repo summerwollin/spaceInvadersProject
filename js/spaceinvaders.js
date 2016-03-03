@@ -17,6 +17,14 @@
 //  Creates an instance of the Game class.
 $(function() {
 
+    var gamepad = navigator.getGamepads()[0];
+    console.log(gamepad);
+    var buttons = gamepad.buttons;
+
+    // if (navigator.getGamepads()[0].buttons[0].pressed) {
+    //   console.log('success');
+    // }
+
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
     var score = localStorage.getItem("score");
@@ -180,6 +188,7 @@ $(function() {
             if (currentState.draw) {
                 currentState.draw(game, dt, ctx);
             }
+
         }
     }
 
@@ -213,6 +222,7 @@ $(function() {
 
     //  Inform the game a key is down.
     Game.prototype.keyDown = function(keyCode) {
+      console.log('keyDown:' + keyCode)
         this.pressedKeys[keyCode] = true;
         //  Delegate to the current state too.
         if (this.currentState() && this.currentState().keyDown) {
@@ -222,6 +232,7 @@ $(function() {
 
     //  Inform the game a key is up.
     Game.prototype.keyUp = function(keyCode) {
+        console.log('keyUp')
         delete this.pressedKeys[keyCode];
         //  Delegate to the current state too.
         if (this.currentState() && this.currentState().keyUp) {
@@ -255,6 +266,7 @@ $(function() {
         if (userid) {
           ctx.fillText("Welcome back, " + userid + "!", game.width / 2, game.height / 2 + 40);
         }
+
     };
 
     WelcomeState.prototype.keyDown = function(game, keyCode) {
@@ -565,6 +577,7 @@ $(function() {
             game.level += 1;
             game.moveToState(new LevelIntroState(game.level));
         }
+
     };
 
     PlayState.prototype.draw = function(game, dt, ctx) {
@@ -624,6 +637,7 @@ $(function() {
             //  Fire!
             this.fireRocket();
         }
+
     };
 
     PlayState.prototype.keyUp = function(game, keyCode) {
@@ -794,6 +808,48 @@ $(function() {
         game.keyUp(keycode);
     });
 
+    var lastButton;
+    var lastIndex;
+
+    function buttonPress() {
+
+    var gamepad = navigator.getGamepads()[0];
+
+    for(var i=0;i<buttons.length;i++) {
+    //TODO: Figure out when gamepad button is pressed or released.
+    // Button Press (key down) -> no button press /different button (keyUp)
+
+        if (i === lastIndex && !buttons[i].pressed){
+          lastIndex = null;
+          game.keyUp(lastButton);
+          lastButton = null;
+        }
+
+        if(buttons[i].pressed){
+          // console.log('pressed');
+          var curButton = buttons.indexOf(buttons[i]);
+          var keyboardButton;
+          switch (curButton) {
+            case 0:
+              keyboardButton = 32;
+              break;
+            case 14:
+              keyboardButton = 37;
+              break;
+            case 15:
+              keyboardButton = 39;
+              break;
+            default:
+          }
+          game.keyDown(keyboardButton);
+          lastIndex = i;
+          lastButton = keyboardButton;
+        }
+      }
+    }
+    window.setInterval(buttonPress, 200);
+    console.log(buttons[0]);
+
     //On click, change view mode
     $('#invaders').on("click", function() {
       currentMode = invadersMode;
@@ -813,5 +869,6 @@ $(function() {
       var input = $('#userid')[0];
       localStorage.setItem("userid", input.value);
     });
+
 
 });
