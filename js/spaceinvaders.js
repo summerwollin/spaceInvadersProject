@@ -17,6 +17,8 @@
 //  Creates an instance of the Game class.
 $(function() {
 
+    $()
+
     // var gamepad = null;
 
     var highScores = [0,0,0];
@@ -49,6 +51,12 @@ $(function() {
     });
 
     function toggleMute() {
+      if ($('audio')[0].paused) {
+        $('audio')[0].play();
+      }
+      else {
+        $('audio')[0].pause();
+      }
       game.mute();
       $("#muteLink")[0].innerText = game.sounds.mute ? "unmute" : "mute";
     }
@@ -129,6 +137,7 @@ $(function() {
             top: gameCanvas.height / 2 - this.config.gameHeight / 2,
             bottom: gameCanvas.height / 2 + this.config.gameHeight / 2,
         };
+
     };
 
     Game.prototype.moveToState = function(state) {

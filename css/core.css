@@ -7,11 +7,17 @@ body, html {
   background-color: black;
 
 }
+.audio {
+  display: none;
+}
 a {
   color: white;
 }
 p a {
-  color: #02FD02
+  color: #02FD02;
+}
+p a:visited {
+  color: #02FD02;
 }
 @font-face {
   font-family: arcadeFont;
