@@ -17,18 +17,21 @@
 //  Creates an instance of the Game class.
 $(function() {
 
-    var gamepad = navigator.getGamepads()[0];
-    console.log(gamepad);
-    var buttons = gamepad.buttons;
-
-    // if (navigator.getGamepads()[0].buttons[0].pressed) {
-    //   console.log('success');
-    // }
+    var gamepad = null;
 
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
     var score = localStorage.getItem("score");
     var hScores = localStorage.getItem("hScores");
+
+    function setHighScores(newScore) {
+          highScores.push(newScore);
+          highScores.sort(function(low, high) {
+            return high - low;
+          });
+          highScores = highScores.slice(0, 3);
+          console.log(highScores);
+        }
 
     if (hScores) {
       hScores = hScores.split(',');
@@ -39,16 +42,6 @@ $(function() {
       $('ol li:nth-child(3)').text(hScores[2]);
       highScores[1] = hScores[1];
     }
-
-    function scoreCounter(gameScore, highScores) {
-
-       for (var i = 0; i < highScores.length; i++) {
-         if (gameScore > highScores[i]) {
-           highScores[i] = gameScore;
-           return;
-         }
-       }
-     }
 
     function ViewMode(shipSrc, invaderSrc, width, height) {
       this.shipImg = new Image();
@@ -222,7 +215,7 @@ $(function() {
 
     //  Inform the game a key is down.
     Game.prototype.keyDown = function(keyCode) {
-      console.log('keyDown:' + keyCode)
+      // console.log('keyDown:' + keyCode)
         this.pressedKeys[keyCode] = true;
         //  Delegate to the current state too.
         if (this.currentState() && this.currentState().keyDown) {
@@ -232,7 +225,7 @@ $(function() {
 
     //  Inform the game a key is up.
     Game.prototype.keyUp = function(keyCode) {
-        console.log('keyUp')
+        // console.log('keyUp')
         delete this.pressedKeys[keyCode];
         //  Delegate to the current state too.
         if (this.currentState() && this.currentState().keyUp) {
@@ -315,7 +308,7 @@ $(function() {
     GameOverState.prototype.keyDown = function(game, keyCode) {
         if (keyCode == 32) /*space*/ {
             //  Space restarts the game.
-            scoreCounter(game.score, highScores);
+            setHighScores(game.score);
             localStorage.setItem("hScores", highScores);
             $('ol li:nth-child(1)').text(highScores[0]);
             $('ol li:nth-child(2)').text(highScores[1]);
@@ -811,44 +804,41 @@ $(function() {
     var lastButton;
     var lastIndex;
 
-    function buttonPress() {
+    function gamepadStateUpdate(oldValue, newValue, injectedkeycode, index) {
+      if(oldValue === newValue) {
+        return;
+      }
 
-    var gamepad = navigator.getGamepads()[0];
-
-    for(var i=0;i<buttons.length;i++) {
-    //TODO: Figure out when gamepad button is pressed or released.
-    // Button Press (key down) -> no button press /different button (keyUp)
-
-        if (i === lastIndex && !buttons[i].pressed){
-          lastIndex = null;
-          game.keyUp(lastButton);
-          lastButton = null;
-        }
-
-        if(buttons[i].pressed){
-          // console.log('pressed');
-          var curButton = buttons.indexOf(buttons[i]);
-          var keyboardButton;
-          switch (curButton) {
-            case 0:
-              keyboardButton = 32;
-              break;
-            case 14:
-              keyboardButton = 37;
-              break;
-            case 15:
-              keyboardButton = 39;
-              break;
-            default:
-          }
-          game.keyDown(keyboardButton);
-          lastIndex = i;
-          lastButton = keyboardButton;
-        }
+      if(newValue === false) {
+        game.keyUp(injectedkeycode);
+      } else {
+        game.keyDown(injectedkeycode);
       }
     }
-    window.setInterval(buttonPress, 200);
-    console.log(buttons[0]);
+
+    var gamepadLeftDown = false;
+    var gamepadRightDown = false;
+    var gamepadShootDown = false;
+
+    function pollGamepad() {
+      var gamepad = navigator.getGamepads()[0];
+
+      if(gamepad === null) {
+        return;
+      }
+
+      var buttons = gamepad.buttons;
+
+      gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
+      gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
+      gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
+
+      gamepadShootDown = buttons[ 0].pressed;
+      gamepadLeftDown  = buttons[14].pressed;
+      gamepadRightDown = buttons[15].pressed;
+    }
+
+    window.setInterval(pollGamepad, 10);
 
     //On click, change view mode
     $('#invaders').on("click", function() {
