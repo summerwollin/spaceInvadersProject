@@ -250,6 +250,26 @@ $(function() {
     Game.prototype.keyDown = function(keyCode) {
       // console.log('keyDown:' + keyCode)
         this.pressedKeys[keyCode] = true;
+        if (keyCode === 18) {
+          if (currentModeNumber === 0) {
+            console.log('first');
+            currentMode = githubMode;
+            currentModeNumber = 1;
+            $('#gameCanvas').css('background-color', '#F5DC96');
+          }
+          else if (currentModeNumber === 1) {
+            console.log('second');
+            currentMode = cookieMode;
+            currentModeNumber = 2;
+            $('#gameCanvas').css('background-color', '#25BFFF');
+          }
+          else if (currentModeNumber === 2) {
+            console.log('third');
+            currentMode = invadersMode;
+            currentModeNumber = 0;
+            $('#gameCanvas').css('background-color', '#232E37');
+          }
+        }
         //  Delegate to the current state too.
         if (this.currentState() && this.currentState().keyDown) {
             this.currentState().keyDown(this, keyCode);
@@ -892,7 +912,7 @@ $(function() {
     var cookieMode = new ViewMode('img/milk.png', 'img/cookie.png', 20, 35);
 
     var currentMode = invadersMode;
-    var viewModeNumber = 0;
+    var currentModeNumber = 0;
 
     //  Create the game.
     var game = new Game();
@@ -907,7 +927,7 @@ $(function() {
     window.addEventListener("keydown", function keydown(e) {
         var keycode = e.which || window.event.keycode;
         //  Supress further processing of left/right/space (37/29/32)
-        if (keycode == 37 || keycode == 39 || keycode == 32) {
+        if (keycode == 37 || keycode == 39 || keycode == 32 || keycode == 18) {
             e.preventDefault();
         }
         game.keyDown(keycode);
@@ -937,6 +957,7 @@ $(function() {
     var gamepadShootDown = false;
     var gamepadAxisLeft = false;
     var gamepadAxisRight = false;
+    var gamepadTrigger = false;
 
     var applyDeadzone = function(number, threshold){
         percentage = (Math.abs(number) - threshold) / (1 - threshold);
@@ -951,7 +972,7 @@ $(function() {
     function pollGamepad() {
       var gamepad = navigator.getGamepads()[0];
 
-      if(gamepad === null) {
+      if(gamepad === undefined) {
         return;
       }
 
@@ -977,16 +998,16 @@ $(function() {
       gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
       gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
       gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
-      gamepadStateUpdate(gamepadAxisLeft, axisLeft, 37);
+      gamepadStateUpdate(gamepadAxisLeft,  axisLeft, 37);
       gamepadStateUpdate(gamepadAxisRight, axisRight, 39);
+      gamepadStateUpdate(gamepadTrigger,   buttons[7].pressed, 18, 7);
 
       gamepadShootDown = buttons[ 0].pressed;
       gamepadLeftDown  = buttons[14].pressed;
       gamepadRightDown = buttons[15].pressed;
       gamepadAxisLeft = axisLeft;
       gamepadAxisRight = axisRight;
-
-
+      gamepadTrigger = buttons[7].pressed;
 
     }
 
@@ -995,66 +1016,19 @@ $(function() {
     //On click, change view mode
     $('#invaders').on("click", function() {
       currentMode = invadersMode;
+      currentModeNumber = 0;
       $('#gameCanvas').css('background-color', '#232E37');
     });
     $('#github').on('click', function() {
      currentMode = githubMode;
+     currentModeNumber = 1;
      $('#gameCanvas').css('background-color', '#F5DC96');
     });
     $('#cookie').on('click', function() {
      currentMode = cookieMode;
+     currentModeNumber = 2;
      $('#gameCanvas').css('background-color', '#25BFFF');
     });
-    var gamepad = navigator.getGamepads()[0];
-    var buttons = gamepad.buttons;
-
-    window.on("change", function() {
-      if (buttons[7].pressed) {
-        console.log(currentMode);
-        if (viewModeNumber === 0) {
-          console.log('invadersmode');
-          currentMode = githubMode;
-          viewModeNumber = 1;
-        }
-        if (viewModeNumber === 1) {
-          console.log('whoops');
-          currentMode = cookieMode;
-          viewModeNumber = 2;
-        }
-        if (viewModeNumber === 2) {
-          currentMode = invadersMode;
-          viewModeNumber = 0;
-        }
-      }
-    })
-  //   if (buttons[7].pressed) {
-  //     console.log(currentMode);
-  //     if (viewModeNumber === 0) {
-  //       console.log('invadersmode');
-  //       currentMode = githubMode;
-  //       viewModeNumber = 1;
-  //     }
-  //     if (viewModeNumber === 1) {
-  //       console.log('whoops');
-  //       currentMode = cookieMode;
-  //       viewModeNumber = 2;
-  //     }
-  //     if (viewModeNumber === 2) {
-  //       currentMode = invadersMode;
-  //       viewModeNumber = 0;
-  //     }
-  //   }
-  //
-  //   function changeViewMode() {
-  //     if (viewModeNumber < 2) {
-  //       viewModeNumber++;
-  //     }
-  //     else {
-  //       viewModeNumber = 0;
-  //     }
-  //   };
-  // }
-
 
     //save userinput to local storage
     $('#submit').on('click', function() {
