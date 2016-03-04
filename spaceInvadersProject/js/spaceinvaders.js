@@ -43,6 +43,10 @@ $(function() {
       highScores[1] = hScores[1];
     }
 
+    if (userid) {
+      $('#scores').html(userid + "'s High Scores:");
+    }
+
     //toggle mute on button press
     $('#muteLink').on('click', function(e) {
       return toggleMute();
@@ -358,7 +362,12 @@ $(function() {
 
         //add last game score to game over screen
         if (score) {
+          if (userid) {
+            ctx.fillText("(" + userid + "'s last score: " + score + ")", game.width / 2, game.height / 2 + 80);
+          }
+          else {
           ctx.fillText("(Last score: " + score + ")", game.width / 2, game.height / 2 + 80);
+          }
         }
 
       localStorage.setItem("score", game.score);
@@ -1032,6 +1041,7 @@ $(function() {
     $('#submit').on('click', function() {
       var input = $('#userid')[0];
       localStorage.setItem("userid", input.value);
+      $('#scores').html(userid + "'s High Scores:");
     });
 
 

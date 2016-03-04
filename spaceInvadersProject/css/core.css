@@ -86,6 +86,10 @@ main {
   padding: 20px;
   margin-right: 50px;
 }
+
+footer p {
+  font-size: 12px;
+}
 .aboutText {
   width: 400px;
   height: 400px;
@@ -95,4 +99,7 @@ main {
 }
 .texty {
   margin-top: 80px;
+}
+footer {
+  text-align: center;
 }
