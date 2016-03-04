@@ -9,13 +9,12 @@ body, html {
 }
 .audio {
   display: none;
+
 }
 a {
   color: white;
 }
-p a {
-  color: #02FD02;
-}
+
 p a:visited {
   color: #02FD02;
 }

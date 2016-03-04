@@ -17,8 +17,6 @@
 //  Creates an instance of the Game class.
 $(function() {
 
-    $()
-
     var gamepad = null;
 
     var highScores = [0,0,0];

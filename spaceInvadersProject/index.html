@@ -52,7 +52,8 @@
 			      </form>
 			      <ul class="nav navbar-nav navbar-right">
 			        <li><a href="index.html">Play</a></li>
-							<li><a href="game.html">About The Game</a></li>
+							<li><a href="game.html">About</a></li>
+							<li><a id="muteLink" href="#">mute</a></li>
 			      </ul>
 			    </div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
@@ -76,12 +77,11 @@
 					<li>0</li>
 					<li>0</li>
 				</ol>
-				<p><a id="muteLink" href="#">mute</a></p>
-				<div class="audio">
-					<audio autoplay loop>
-  					<source src="sounds/ambientspaceclip.wav" type="audio/wav">
-					</audio>
-				</div>
+			</div>
+			<div class="audio">
+				<audio autoplay loop>
+					<source src="sounds/ambientspaceclip.wav" type="audio/wav">
+				</audio>
 			</div>
     	<div id="gamecontainer">
         <canvas id="gameCanvas"></canvas>
