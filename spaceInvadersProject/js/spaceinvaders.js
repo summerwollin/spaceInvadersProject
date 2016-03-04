@@ -954,10 +954,10 @@ $(function() {
 
     var gamepadLeftDown = false;
     var gamepadRightDown = false;
-    var gamepadShootDown = false;
     var gamepadAxisLeft = false;
     var gamepadAxisRight = false;
     var gamepadTrigger = false;
+    var gamepadA  = false;
 
     var applyDeadzone = function(number, threshold){
         percentage = (Math.abs(number) - threshold) / (1 - threshold);
@@ -995,14 +995,14 @@ $(function() {
       }
 
 
-      gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
+      gamepadStateUpdate(gamepadA, buttons[0].pressed, 18,  0);
       gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
       gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
       gamepadStateUpdate(gamepadAxisLeft,  axisLeft, 37);
       gamepadStateUpdate(gamepadAxisRight, axisRight, 39);
-      gamepadStateUpdate(gamepadTrigger,   buttons[7].pressed, 18, 7);
+      gamepadStateUpdate(gamepadTrigger,   buttons[7].pressed, 32, 7);
 
-      gamepadShootDown = buttons[ 0].pressed;
+      gamepadA = buttons[ 0].pressed;
       gamepadLeftDown  = buttons[14].pressed;
       gamepadRightDown = buttons[15].pressed;
       gamepadAxisLeft = axisLeft;
