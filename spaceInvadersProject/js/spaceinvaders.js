@@ -892,6 +892,7 @@ $(function() {
     var cookieMode = new ViewMode('img/milk.png', 'img/cookie.png', 20, 35);
 
     var currentMode = invadersMode;
+    var viewModeNumber = 0;
 
     //  Create the game.
     var game = new Game();
@@ -984,6 +985,26 @@ $(function() {
       gamepadRightDown = buttons[15].pressed;
       gamepadAxisLeft = axisLeft;
       gamepadAxisRight = axisRight;
+
+      if (buttons[7].pressed) {
+        console.log('modessss');
+        console.log(currentMode);
+        if (viewModeNumber === 0) {
+          console.log('invadersmode');
+          currentMode = githubMode;
+          console.log(currentMode);
+          console.log('ooooooooooo');
+          viewModeNumber = 1;
+        }
+        if (viewModeNumber === 1) {
+          currentMode = cookieMode;
+          viewModeNumber = 2;
+        }
+        if (viewModeNumber === 2) {
+          currentMode = invadersMode;
+          viewModeNumber = 0;
+        }
+      }
     }
 
     window.setInterval(pollGamepad, 10);
@@ -1001,6 +1022,7 @@ $(function() {
      currentMode = cookieMode;
      $('#gameCanvas').css('background-color', '#25BFFF');
     });
+
 
     //save userinput to local storage
     $('#submit').on('click', function() {
