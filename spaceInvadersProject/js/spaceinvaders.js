@@ -986,25 +986,8 @@ $(function() {
       gamepadAxisLeft = axisLeft;
       gamepadAxisRight = axisRight;
 
-      if (buttons[7].pressed) {
-        console.log('modessss');
-        console.log(currentMode);
-        if (viewModeNumber === 0) {
-          console.log('invadersmode');
-          currentMode = githubMode;
-          console.log(currentMode);
-          console.log('ooooooooooo');
-          viewModeNumber = 1;
-        }
-        if (viewModeNumber === 1) {
-          currentMode = cookieMode;
-          viewModeNumber = 2;
-        }
-        if (viewModeNumber === 2) {
-          currentMode = invadersMode;
-          viewModeNumber = 0;
-        }
-      }
+
+
     }
 
     window.setInterval(pollGamepad, 10);
@@ -1022,6 +1005,55 @@ $(function() {
      currentMode = cookieMode;
      $('#gameCanvas').css('background-color', '#25BFFF');
     });
+    var gamepad = navigator.getGamepads()[0];
+    var buttons = gamepad.buttons;
+
+    window.on("change", function() {
+      if (buttons[7].pressed) {
+        console.log(currentMode);
+        if (viewModeNumber === 0) {
+          console.log('invadersmode');
+          currentMode = githubMode;
+          viewModeNumber = 1;
+        }
+        if (viewModeNumber === 1) {
+          console.log('whoops');
+          currentMode = cookieMode;
+          viewModeNumber = 2;
+        }
+        if (viewModeNumber === 2) {
+          currentMode = invadersMode;
+          viewModeNumber = 0;
+        }
+      }
+    })
+  //   if (buttons[7].pressed) {
+  //     console.log(currentMode);
+  //     if (viewModeNumber === 0) {
+  //       console.log('invadersmode');
+  //       currentMode = githubMode;
+  //       viewModeNumber = 1;
+  //     }
+  //     if (viewModeNumber === 1) {
+  //       console.log('whoops');
+  //       currentMode = cookieMode;
+  //       viewModeNumber = 2;
+  //     }
+  //     if (viewModeNumber === 2) {
+  //       currentMode = invadersMode;
+  //       viewModeNumber = 0;
+  //     }
+  //   }
+  //
+  //   function changeViewMode() {
+  //     if (viewModeNumber < 2) {
+  //       viewModeNumber++;
+  //     }
+  //     else {
+  //       viewModeNumber = 0;
+  //     }
+  //   };
+  // }
 
 
     //save userinput to local storage
