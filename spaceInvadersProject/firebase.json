@@ -1,9 +1,0 @@
-{
-  "firebase": "spaceinvadersjs",
-  "public": "",
-  "ignore": [
-    "firebase.json",
-    "**/.*",
-    "**/node_modules/**"
-  ]
-}

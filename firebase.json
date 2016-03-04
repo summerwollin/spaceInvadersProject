@@ -1,6 +1,6 @@
 {
   "firebase": "spaceinvadersjs",
-  "public": "frontend-spaceinvaders",
+  "public": "spaceInvadersProject",
   "ignore": [
     "firebase.json",
     "**/.*",
