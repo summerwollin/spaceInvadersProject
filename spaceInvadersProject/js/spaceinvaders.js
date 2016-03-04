@@ -19,7 +19,7 @@ $(function() {
 
     $()
 
-    // var gamepad = null;
+    var gamepad = null;
 
     var highScores = [0,0,0];
     var userid = localStorage.getItem("userid");
@@ -916,44 +916,77 @@ $(function() {
         game.keyUp(keycode);
     });
 
-    // var lastButton;
-    // var lastIndex;
-    //
-    // function gamepadStateUpdate(oldValue, newValue, injectedkeycode, index) {
-    //   if(oldValue === newValue) {
-    //     return;
-    //   }
-    //
-    //   if(newValue === false) {
-    //     game.keyUp(injectedkeycode);
-    //   } else {
-    //     game.keyDown(injectedkeycode);
-    //   }
-    // }
-    //
-    // var gamepadLeftDown = false;
-    // var gamepadRightDown = false;
-    // var gamepadShootDown = false;
-    //
-    // function pollGamepad() {
-    //   var gamepad = navigator.getGamepads()[0];
-    //
-    //   if(gamepad === null) {
-    //     return;
-    //   }
-    //
-    //   var buttons = gamepad.buttons;
-    //
-    //   gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
-    //   gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
-    //   gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
-    //
-    //   gamepadShootDown = buttons[ 0].pressed;
-    //   gamepadLeftDown  = buttons[14].pressed;
-    //   gamepadRightDown = buttons[15].pressed;
-    // }
-    //
-    // window.setInterval(pollGamepad, 10);
+    var lastButton;
+    var lastIndex;
+
+    function gamepadStateUpdate(oldValue, newValue, injectedkeycode, index) {
+      if(oldValue === newValue) {
+        return;
+      }
+
+      if(newValue === false) {
+        game.keyUp(injectedkeycode);
+      } else {
+        game.keyDown(injectedkeycode);
+      }
+    }
+
+    var gamepadLeftDown = false;
+    var gamepadRightDown = false;
+    var gamepadShootDown = false;
+    var gamepadAxisLeft = false;
+    var gamepadAxisRight = false;
+
+    var applyDeadzone = function(number, threshold){
+        percentage = (Math.abs(number) - threshold) / (1 - threshold);
+
+        if(percentage < 0) {
+            percentage = 0;
+        }
+
+        return percentage * (number > 0 ? 1 : -1);
+    }
+
+    function pollGamepad() {
+      var gamepad = navigator.getGamepads()[0];
+
+      if(gamepad === null) {
+        return;
+      }
+
+      var buttons = gamepad.buttons;
+      var axis = applyDeadzone(gamepad.axes[0], 0.25);
+
+      var axisLeft;
+      var axisRight;
+
+      if (axis < -0.25) {
+        console.log('left');
+        axisLeft = true;
+        axisRight = false;
+
+      }
+      else if (axis > 0.25) {
+        console.log('right');
+        axisRight = true;
+        axisLeft = false;
+      }
+
+
+      gamepadStateUpdate(gamepadShootDown, buttons[ 0].pressed, 32,  0);
+      gamepadStateUpdate(gamepadLeftDown,  buttons[14].pressed, 37, 14);
+      gamepadStateUpdate(gamepadRightDown, buttons[15].pressed, 39, 15);
+      gamepadStateUpdate(gamepadAxisLeft, axisLeft, 37);
+      gamepadStateUpdate(gamepadAxisRight, axisRight, 39);
+
+      gamepadShootDown = buttons[ 0].pressed;
+      gamepadLeftDown  = buttons[14].pressed;
+      gamepadRightDown = buttons[15].pressed;
+      gamepadAxisLeft = axisLeft;
+      gamepadAxisRight = axisRight;
+    }
+
+    window.setInterval(pollGamepad, 10);
 
     //On click, change view mode
     $('#invaders').on("click", function() {
